@@ -46,16 +46,8 @@ type EventQueue struct {
 	MaxStorage int `json:"maxStorage"`
 	MaxHistory int `json:"maxHistory"`
 	
-    events []*Event
-	history[]*Event
-}
-```
-
-## 事件
-```
-type Event struct {
-    Name string "json:"name"`
-	Type string `json:"type"`
+    events []*JobInstance
+	history[]*JobInstance
 }
 ```
 
@@ -63,7 +55,8 @@ type Event struct {
 - JobList
 ``` json
 {
-    "Default": {
+    "key": "default",
+	"value": {
         "concurrency": <number>,
 	    "maxScheduledCount": <number>,
 	    "maxHistory": <number>,
@@ -78,7 +71,8 @@ type Event struct {
 ``` json
 [
     {
-	    "job1": {
+	    "key": "job1",
+		"value": {
             "name": "job1",
 	        "display": "任务1",
             "type": "ShellScript",
@@ -89,7 +83,8 @@ type Event struct {
 		}
 	},
 	{
-	    "job2": {
+	    "key": "job2",
+		"value": {
 	        "name": "job2",
 	        "display": "任务2",
             "type": "ShellScript",
@@ -104,7 +99,7 @@ type Event struct {
 - EventQueue
 ```json
 {
-    "Default": {
+    "key": "default": {
         "maxStorage": <number>,
         "maxHistory": <number>,
 		"history": [
