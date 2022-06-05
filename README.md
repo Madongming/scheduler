@@ -10,7 +10,7 @@
 - docker
 ```shell
 make run-docker
-```shell
+```
 
 - test
 ```shell
@@ -30,6 +30,7 @@ make build-check-race
 ```shell
 bin/schedule
 ```
+
 ## 现状及限制
 - 只是实现了函数级别的api，后续可以自由对接cmd活着http api
 - 数据存储层是简单实现的文件(json)记录的数据
