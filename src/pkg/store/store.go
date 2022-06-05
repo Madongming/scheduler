@@ -34,6 +34,8 @@ func CreateJobList(key string, value JobList) error {
 
 // AddJobListJobs add the Job names into JobList
 func AddJobListJobs(name ...string) error {
+	mu.Lock()
+	defer mu.Unlock()
 	content, err := ioutil.ReadFile(JobListPath)
 	if err != nil {
 		return err
@@ -52,6 +54,9 @@ func AddJobListJobs(name ...string) error {
 
 // DeleteJobListJobs delete the Job names from JobList
 func DeleteJobListJobs(name ...string) error {
+	mu.Lock()
+	defer mu.Unlock()
+
 	content, err := ioutil.ReadFile(JobListPath)
 	if err != nil {
 		return err
@@ -98,6 +103,9 @@ func AddJob(value ...Job) error {
 		content []byte
 		err     error
 	)
+	mu.Lock()
+	defer mu.Unlock()
+
 	if _, err = os.Stat(JobsPath); os.IsNotExist(err) {
 		content, err = json.Marshal(data)
 		if err != nil {
@@ -133,6 +141,10 @@ func DeleteJob(key ...string) error {
 	if err := DeleteJobListJobs(key...); err != nil {
 		return err
 	}
+
+	mu.Lock()
+	defer mu.Unlock()
+
 	content, err := ioutil.ReadFile(JobsPath)
 	if err != nil {
 		return err
@@ -170,6 +182,9 @@ func DeleteJob(key ...string) error {
 }
 
 func UpdateJob(key string, value Job) (Job, error) {
+	mu.Lock()
+	defer mu.Unlock()
+
 	content, err := ioutil.ReadFile(JobsPath)
 	if err != nil {
 		return Job{}, err
@@ -197,6 +212,7 @@ func UpdateJob(key string, value Job) (Job, error) {
 
 	return value, ioutil.WriteFile(JobsPath, content, 0644)
 }
+
 func GetJobs() ([]Job, error) {
 	content, err := ioutil.ReadFile(JobsPath)
 	if err != nil {
@@ -219,6 +235,19 @@ func GetJobs() ([]Job, error) {
 	return re, nil
 }
 
+func GetJob(name string) (Job, error) {
+	jobs, err := GetJobs()
+	if err != nil {
+		return Job{}, err
+	}
+	for i := range jobs {
+		if jobs[i].Name == name {
+			return jobs[i], nil
+		}
+	}
+	return Job{}, ErrorJobNotFound
+}
+
 // Events
 func CreateEventQueue(key string, value EventQueue) error {
 	content, err := json.Marshal(
@@ -237,6 +266,9 @@ func CreateEventQueue(key string, value EventQueue) error {
 }
 
 func AddHistory(value ...JobInstance) error {
+	mu.Lock()
+	defer mu.Unlock()
+
 	content, err := ioutil.ReadFile(EventQueuePath)
 	if err != nil {
 		return err

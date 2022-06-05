@@ -1,5 +1,14 @@
 package store
 
+import (
+	"sync"
+	"time"
+)
+
+var (
+	mu sync.Mutex
+)
+
 type JobList struct {
 	Concurrency       int      `json:"concurrency"`
 	MaxScheduledCount int      `json:"maxScheduledCount"`
@@ -8,11 +17,11 @@ type JobList struct {
 }
 
 type Job struct {
-	Name             string `json:"name"`
-	Display          string `json:"display"`
-	Type             string `json:"type"`
-	ScheduleDuration int64  `json:"scheduleDuration"`
-	Timeout          int64  `json:"timeout"`
-	RetryTimes       uint8  `json:"retryTimes"`
-	RetryWait        int64  `json:"retryWait"`
+	Name             string        `json:"name"`
+	Display          string        `json:"display"`
+	Type             string        `json:"type"`
+	ScheduleDuration time.Duration `json:"scheduleDuration"`
+	Timeout          time.Duration `json:"timeout"`
+	RetryTimes       uint8         `json:"retryTimes"`
+	RetryWait        time.Duration `json:"retryWait"`
 }

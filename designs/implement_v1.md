@@ -9,6 +9,9 @@ type JobList struct {
 	MaxHistory int `json:"maxHistory"`
 	
 	Jobs []Job `json:"jobs"`
+	
+	chConcurrentcied chan struct{} // 控制并发数
+	chScheduled      chan struct{} // 控制定时执行任务的数量
 }
 ```
 
@@ -23,6 +26,8 @@ type Job struct {
 	RetryTimes uint8 `json:"retryTimes"`
 	RetryWait time.Duration `json:"retryWait"` // 默认等于超时时间
 	Jober Jober `json:"spec"`
+	
+	ticker *time.Ticker // 定时执行的定时器
 }
 ```
 每个任务的实例
@@ -32,8 +37,8 @@ type JobInstance struct {
 	Display string `json:"display"`
 	Type string `json:"type"`
     State string `json:"state"`
-	StartTimestamp int64 `json:"startTime"`
-	EndTimestamp int64 `json:"endTime"`
+	StartTimestamp time.Duration `json:"startTime"`
+	EndTimestamp time.Duration `json:"endTime"`
 	Done bool `json:"done"`
 	Reason string `json:"reason"`
 	Message string `json:"message"`
@@ -46,8 +51,8 @@ type EventQueue struct {
 	MaxStorage int `json:"maxStorage"`
 	MaxHistory int `json:"maxHistory"`
 	
-    events []*JobInstance
-	history[]*JobInstance
+    events []JobInstance
+	history[]JobInstance
 }
 ```
 
@@ -141,24 +146,19 @@ type EventQueue struct {
 ## 数据行为（methods）
 
 ### JobList
-- Add(job Job) error // 增加一个Job
+- Add(job *Job) error // 增加一个Job
 - Delete(name string) error // 删除一个Job
-- Update(job Job) (Job, error) // 更新一个Job
-- Get() (JobList, error) // 列出所有Job
-- GetJob(name string) (Job, error) // 获取指定Job
-- StartSchedule(job Job) error // 如果是需要调度执行的Job，开始这个调度
-- StopSchedule(job Job) error // 如果是需要调度执行的Job，停止这个调度
-
-### Job
-- Run(ctx context) error // 运行Job
-- Stop(ctx context) error // 停止Job
+- Update(job *Job) (*Job, error) // 更新一个Job
+- Get() (*JobList, error) // 列出所有Job
+- GetJob(name string) (*Job, error) // 获取指定Job
+- StartSchedule(job *Job) error // 如果是需要调度执行的Job，开始这个调度
+- StopSchedule(job *Job) error // 如果是需要调度执行的Job，停止这个调度
+- RunJob(job *Job) // 运行Job
+- StopJob() error // 停止Job
 
 ### EventQueue
-- Push(event Event) error // 加入一个Job
-- Pop() (event Event, error) // 取出一个Job
-
-### Event
-- Process() error // 处理一个事件
+- Push(job *Job) error // 加入一个Job
+- Pop2History(name string) error // 用Job 名称取出一个Job放入history
 
 # 行为
 
@@ -173,10 +173,10 @@ type Jober interface {
 
 ## 应用层
 ### 工厂函数
-- JobList New(concurrency, maxScheduledCount int) (*JobList, error)
-- Job New(name, display, type string, scheduleDuration, timeout time.Duration, jober Jober) (*Job, error)
-- EventQueue New(maxStorage int) (*EventQueue, error)
-- Event New(name, type string) (*Event, error)
+- NewJobList(concurrency, maxScheduledCount, int) (*JobList, error)
+- NewJob(name, display, typeName string, scheduleDuration, timeout, retryWait time.Duration, retryTimes uint8, jober Jober) (*Job, error)
+- NewJobInstance(job *Job) (*JobInstance, error)
+- NewEventQueue(maxStorage, maxHistory int) (*EventQueue, error)
 
 ### 业务函数
 #### JobList处理
@@ -191,8 +191,8 @@ type Jober interface {
 - StopJob(ctx context, name string) error // 停止Job
 
 #### 可观测性
-- RunningJob() ([]*JobInstance, error)
-- JobHistory() ([]*JobInstance, error)
+- RunningJob() ([]JobInstance, error)
+- JobHistory() ([]JobInstance, error)
 
 # Api
 - CreateJobList(concurrency, maxScheduledCount，maxHistory int) (*JobList, error) // 创建job list同时创建事件队列
@@ -204,8 +204,8 @@ type Jober interface {
 - GetJob(name string) (Job, error) // 获取指定Job
 - RunJob(ctx context, name string) error // 运行Job
 - StopJob(ctx context, name string) error // 停止Job
-- RunningJob() ([]*JobInstance, error)
-- JobHistory() ([]*JobInstance, error)
+- RunningJob() ([]JobInstance, error)
+- JobHistory() ([]JobInstance, error)
 
 # 一个job的实例
 ## ShellScript

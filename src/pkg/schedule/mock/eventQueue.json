@@ -1,0 +1,1 @@
+{"key":"_event_default-root","value":{"maxStorage":2,"maxHistory":1,"history":[{"name":"job2","display":"任务2","type":"ShellScript","state":"Created","startTime":"0001-01-01T00:00:00Z","endTime":"0001-01-01T00:00:00Z","done":false,"reason":"","message":""}]}}

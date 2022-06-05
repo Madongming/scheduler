@@ -1,5 +1,7 @@
 package store
 
+import "time"
+
 type EventQueue struct {
 	MaxStorage int           `json:"maxStorage"`
 	MaxHistory int           `json:"maxHistory"`
@@ -7,13 +9,21 @@ type EventQueue struct {
 }
 
 type JobInstance struct {
-	Name           string `json:"name"`
-	Display        string `json:"display"`
-	Type           string `json:"type"`
-	State          string `json:"state"`
-	StartTimestamp int64  `json:"startTime"`
-	EndTimestamp   int64  `json:"endTime"`
-	Done           bool   `json:"done"`
-	Reason         string `json:"reason"`
-	Message        string `json:"message"`
+	Name      string    `json:"name"`
+	Display   string    `json:"display"`
+	Type      string    `json:"type"`
+	State     string    `json:"state"`
+	StartTime time.Time `json:"startTime"`
+	EndTime   time.Time `json:"endTime"`
+	Done      bool      `json:"done"`
+	Reason    string    `json:"reason"`
+	Message   string    `json:"message"`
+}
+
+func NewJobInstance(job *Job) (JobInstance, error) {
+	return JobInstance{
+		Name:    job.Name,
+		Display: job.Display,
+		Type:    job.Type,
+	}, nil
 }

@@ -5,6 +5,11 @@ import (
 	"io/ioutil"
 	"reflect"
 	"testing"
+	"time"
+)
+
+var (
+	testTime = time.Now()
 )
 
 type jobListStore struct {
@@ -416,6 +421,65 @@ func TestGetJobs(t *testing.T) {
 	}
 }
 
+func TestGetJob(t *testing.T) {
+	type args struct {
+		name string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    Job
+		wantErr bool
+	}{
+		{
+			name: "Get a job by name",
+			args: args{
+				name: "job1",
+			},
+			want: Job{
+				Name:             "job1",
+				Display:          "任务1",
+				Type:             "ShellScript",
+				ScheduleDuration: 3000000000,
+				Timeout:          1000000000,
+				RetryTimes:       3,
+				RetryWait:        2000000000,
+			},
+			wantErr: false,
+		},
+		{
+			name: "Get a not exsit job by name",
+			args: args{
+				name: "job2",
+			},
+			wantErr: true,
+		},
+	}
+	AddJob(Job{
+		Name:             "job1",
+		Display:          "任务1",
+		Type:             "ShellScript",
+		ScheduleDuration: 3000000000,
+		Timeout:          1000000000,
+		RetryTimes:       3,
+		RetryWait:        2000000000,
+	})
+	defer DeleteJob("job1")
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetJob(tt.args.name)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetJob() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetJob() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestCreateEventQueue(t *testing.T) {
 	type args struct {
 		key   string
@@ -484,15 +548,13 @@ func TestAddHistory(t *testing.T) {
 			args: args{
 				value: []JobInstance{
 					JobInstance{
-						Name:           "job1",
-						Display:        "任务1",
-						Type:           "ShellScript",
-						State:          "Success",
-						StartTimestamp: 153452356214,
-						EndTimestamp:   153452357214,
-						Done:           true,
-						Reason:         "",
-						Message:        "Hello, world",
+						Name:    "job1",
+						Display: "任务1",
+						Type:    "ShellScript",
+						State:   "Success",
+						Done:    true,
+						Reason:  "",
+						Message: "Hello, world",
 					},
 				},
 			},
@@ -504,15 +566,13 @@ func TestAddHistory(t *testing.T) {
 					MaxHistory: 100,
 					History: []JobInstance{
 						JobInstance{
-							Name:           "job1",
-							Display:        "任务1",
-							Type:           "ShellScript",
-							State:          "Success",
-							StartTimestamp: 153452356214,
-							EndTimestamp:   153452357214,
-							Done:           true,
-							Reason:         "",
-							Message:        "Hello, world",
+							Name:    "job1",
+							Display: "任务1",
+							Type:    "ShellScript",
+							State:   "Success",
+							Done:    true,
+							Reason:  "",
+							Message: "Hello, world",
 						},
 					},
 				},
@@ -555,15 +615,13 @@ func TestGetHistory(t *testing.T) {
 			name: "Get the history",
 			want: []JobInstance{
 				JobInstance{
-					Name:           "job1",
-					Display:        "任务1",
-					Type:           "ShellScript",
-					State:          "Success",
-					StartTimestamp: 153452356214,
-					EndTimestamp:   153452357214,
-					Done:           true,
-					Reason:         "",
-					Message:        "Hello, world",
+					Name:    "job1",
+					Display: "任务1",
+					Type:    "ShellScript",
+					State:   "Success",
+					Done:    true,
+					Reason:  "",
+					Message: "Hello, world",
 				},
 			},
 			wantErr: false,
@@ -573,15 +631,13 @@ func TestGetHistory(t *testing.T) {
 		MaxStorage: 100,
 		MaxHistory: 100})
 	AddHistory(JobInstance{
-		Name:           "job1",
-		Display:        "任务1",
-		Type:           "ShellScript",
-		State:          "Success",
-		StartTimestamp: 153452356214,
-		EndTimestamp:   153452357214,
-		Done:           true,
-		Reason:         "",
-		Message:        "Hello, world",
+		Name:    "job1",
+		Display: "任务1",
+		Type:    "ShellScript",
+		State:   "Success",
+		Done:    true,
+		Reason:  "",
+		Message: "Hello, world",
 	})
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
