@@ -67,10 +67,12 @@ func (eq *EventQueue) Pop2History(name string) error {
 		jobInstance store.JobInstance
 		err         error
 	)
+
 	jobInstance, eq.events, err = deleteInstanceByName(name, eq.events)
 	if err != nil {
 		return err
 	}
+
 	jobInstance.State = StateSuccess
 	jobInstance.Done = true
 	jobInstance.EndTime = time.Now()

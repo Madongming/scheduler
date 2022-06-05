@@ -68,7 +68,9 @@ func GetJobList() ([]store.Job, error) {
 func GetJob(name string) (store.Job, error) {
 	return JobList.GetJob(name)
 }
-
+func GetScheduleJob(name string) (schedule.Job, error) {
+	return getJob(name)
+}
 func RunJob(name string) error {
 	job, err := getJob(name)
 	if err != nil {

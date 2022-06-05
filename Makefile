@@ -1,6 +1,9 @@
 .PHONY: test build-check-race build run
 
-build:
+clean:
+	find . -type d -name "mock" -exec rm -rf {} \; ||echo
+
+build: clean
 	go build -o bin/schedule ./cmd/main.go
 
 vet:
@@ -12,7 +15,7 @@ test:
 build-check-race:
 	go build -race -o bin/schedule ./cmd/main.go
 
-run:
+run: clean
 	go run ./cmd/main.go
 
 build-docker:
