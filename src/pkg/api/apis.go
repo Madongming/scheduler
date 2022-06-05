@@ -31,8 +31,10 @@ func CreateJobList(concurrency, maxScheduledCount, maxHistory int) error {
 func CreateJob(name, display, typeName string, scheduleDuration, timeout, retryWait time.Duration, retryTimes uint8) error {
 	var jober schedule.Jober
 	switch typeName {
-	case plugin.SleepCmd:
-		jober = plugin.NewSleep()
+	case plugin.SleepCmd1:
+		jober = plugin.NewSleep1()
+	case plugin.SleepCmd2:
+		jober = plugin.NewSleep2()
 	default:
 		return ErrorPluginNotFound
 	}
@@ -105,7 +107,7 @@ func getJob(name string) (schedule.Job, error) {
 	var job schedule.Job
 
 	switch storeJob.TypeName {
-	case plugin.SleepCmd:
+	case plugin.SleepCmd1:
 		job, err = schedule.NewJob(
 			storeJob.Name,
 			storeJob.Display,
@@ -114,7 +116,20 @@ func getJob(name string) (schedule.Job, error) {
 			storeJob.Timeout,
 			storeJob.RetryWait,
 			storeJob.RetryTimes,
-			plugin.NewSleep())
+			plugin.NewSleep1())
+		if err != nil {
+			return schedule.Job{}, err
+		}
+	case plugin.SleepCmd2:
+		job, err = schedule.NewJob(
+			storeJob.Name,
+			storeJob.Display,
+			storeJob.TypeName,
+			storeJob.ScheduleDuration,
+			storeJob.Timeout,
+			storeJob.RetryWait,
+			storeJob.RetryTimes,
+			plugin.NewSleep2())
 		if err != nil {
 			return schedule.Job{}, err
 		}

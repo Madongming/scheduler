@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestSleep_Run(t *testing.T) {
+func TestSleep1_Run(t *testing.T) {
 	type fields struct {
 		Name     string
 		Duration time.Duration
@@ -16,7 +16,7 @@ func TestSleep_Run(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Sleep run",
+			name: "Sleep1 run",
 			fields: fields{
 				Name:     "Sleep 1",
 				Duration: time.Second,
@@ -26,18 +26,18 @@ func TestSleep_Run(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Sleep{
+			s := &Sleep1{
 				Name:     tt.fields.Name,
 				Duration: tt.fields.Duration,
 			}
 			if err := s.Run(); (err != nil) != tt.wantErr {
-				t.Errorf("Sleep.Run() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Sleep1.Run() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
 }
 
-func TestSleep_Stop(t *testing.T) {
+func TestSleep1_Stop(t *testing.T) {
 	type fields struct {
 		Name     string
 		Duration time.Duration
@@ -48,7 +48,7 @@ func TestSleep_Stop(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Sleep stop",
+			name: "Sleep1 stop",
 			fields: fields{
 				Name:     "Sleep 1",
 				Duration: time.Second,
@@ -58,12 +58,12 @@ func TestSleep_Stop(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Sleep{
+			s := &Sleep1{
 				Name:     tt.fields.Name,
 				Duration: tt.fields.Duration,
 			}
 			if err := s.Stop(); (err != nil) != tt.wantErr {
-				t.Errorf("Sleep.Stop() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Sleep1.Stop() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
