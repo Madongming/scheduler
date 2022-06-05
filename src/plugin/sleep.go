@@ -5,12 +5,22 @@ import (
 	"time"
 )
 
+const (
+	SleepCmd = "SleepCmd"
+
+	name = "SleepCmd"
+)
+
+var (
+	duration = 3 * time.Second
+)
+
 type Sleep struct {
 	Name     string
 	Duration time.Duration
 }
 
-func NewSleep(name string, duration time.Duration) *Sleep {
+func NewSleep() *Sleep {
 	return &Sleep{Name: name, Duration: duration}
 }
 

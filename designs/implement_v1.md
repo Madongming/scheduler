@@ -197,7 +197,6 @@ type Jober interface {
 # Api
 - CreateJobList(concurrency, maxScheduledCount，maxHistory int) (*JobList, error) // 创建job list同时创建事件队列
 - CreateJob(name, display, type string, scheduleDuration, timeout, retryWait time.Duration, retryTimes int, jober Jober) (*Job, error)
-- AddJobList(*Job) error // 添加一个Job
 - DeleteJobList(name string) error // 删除一个Job
 - UpdateJobList(job Job) (*Job, error) // 更新一个Job
 - GetJobList() (JobList, error) // 列出所有Job

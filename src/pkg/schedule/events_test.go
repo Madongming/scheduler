@@ -24,7 +24,7 @@ func TestEventQueue_Push(t *testing.T) {
 					Job: store.Job{
 						Name:             "job1",
 						Display:          "任务1",
-						Type:             "ShellScript",
+						TypeName:         "ShellScript",
 						ScheduleDuration: 10 * time.Second,
 						Timeout:          5 * time.Second,
 						RetryTimes:       3,
@@ -42,7 +42,7 @@ func TestEventQueue_Push(t *testing.T) {
 					Job: store.Job{
 						Name:             "job2",
 						Display:          "任务2",
-						Type:             "ShellScript",
+						TypeName:         "ShellScript",
 						ScheduleDuration: 10 * time.Second,
 						Timeout:          5 * time.Second,
 						RetryTimes:       3,
@@ -60,7 +60,7 @@ func TestEventQueue_Push(t *testing.T) {
 					Job: store.Job{
 						Name:             "job3",
 						Display:          "任务3",
-						Type:             "ShellScript",
+						TypeName:         "ShellScript",
 						ScheduleDuration: 10 * time.Second,
 						Timeout:          5 * time.Second,
 						RetryTimes:       3,
@@ -125,7 +125,7 @@ func TestEventQueue_Pop2History(t *testing.T) {
 			Job: store.Job{
 				Name:             "job1",
 				Display:          "任务1",
-				Type:             "ShellScript",
+				TypeName:         "ShellScript",
 				ScheduleDuration: 10 * time.Second,
 				Timeout:          5 * time.Second,
 				RetryTimes:       3,
@@ -137,7 +137,7 @@ func TestEventQueue_Pop2History(t *testing.T) {
 			Job: store.Job{
 				Name:             "job2",
 				Display:          "任务2",
-				Type:             "ShellScript",
+				TypeName:         "ShellScript",
 				ScheduleDuration: 10 * time.Second,
 				Timeout:          5 * time.Second,
 				RetryTimes:       3,

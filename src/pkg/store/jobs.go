@@ -19,7 +19,7 @@ type JobList struct {
 type Job struct {
 	Name             string        `json:"name"`
 	Display          string        `json:"display"`
-	Type             string        `json:"type"`
+	TypeName         string        `json:"type"`
 	ScheduleDuration time.Duration `json:"scheduleDuration"`
 	Timeout          time.Duration `json:"timeout"`
 	RetryTimes       uint8         `json:"retryTimes"`

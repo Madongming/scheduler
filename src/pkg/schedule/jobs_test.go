@@ -37,7 +37,7 @@ func TestJobList_StartSchedule(t *testing.T) {
 					Job: store.Job{
 						Name:             "job1",
 						Display:          "任务1",
-						Type:             "ShellScript",
+						TypeName:         "ShellScript",
 						ScheduleDuration: 10 * time.Second,
 						Timeout:          5 * time.Second,
 						RetryTimes:       3,
@@ -55,7 +55,7 @@ func TestJobList_StartSchedule(t *testing.T) {
 					Job: store.Job{
 						Name:             "job2",
 						Display:          "任务2",
-						Type:             "ShellScript",
+						TypeName:         "ShellScript",
 						ScheduleDuration: 10 * time.Second,
 						Timeout:          5 * time.Second,
 						RetryTimes:       3,
@@ -99,7 +99,7 @@ func TestJobList_RunJob(t *testing.T) {
 					Job: store.Job{
 						Name:             "job1",
 						Display:          "任务1",
-						Type:             "ShellScript",
+						TypeName:         "ShellScript",
 						ScheduleDuration: 10 * time.Second,
 						Timeout:          5 * time.Second,
 						RetryTimes:       3,
@@ -110,33 +110,15 @@ func TestJobList_RunJob(t *testing.T) {
 			},
 			wantErr: false,
 		},
-		{
-			name: "Run job 2, can't runable",
-			args: args{
-				job: &Job{
-					Job: store.Job{
-						Name:             "job2",
-						Display:          "任务2",
-						Type:             "ShellScript",
-						ScheduleDuration: 10 * time.Second,
-						Timeout:          5 * time.Second,
-						RetryTimes:       3,
-						RetryWait:        1 * time.Second,
-					},
-					Jober: &JobShellScript{},
-				},
-			},
-			wantErr: true,
-		},
 	}
-	// 限制1个并发
+
 	jl, err := NewJobList(1, 10, 100, true)
 	if err != nil {
 		t.Errorf("NewJobList(1, 10, 100, true) error = %v", err)
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		go t.Run(tt.name, func(t *testing.T) {
 			if err := jl.RunJob(tt.args.job); (err != nil) != tt.wantErr {
 				t.Errorf("JobList.RunJob() error = %v, wantErr %v", err, tt.wantErr)
 			}

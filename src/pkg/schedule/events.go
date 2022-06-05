@@ -3,6 +3,7 @@ package schedule
 import (
 	"os"
 	"sync"
+	"time"
 
 	"github.com/madongming/scheduler/src/pkg/store"
 )
@@ -12,9 +13,10 @@ type EventQueue struct {
 
 	events []store.JobInstance
 
-	mu *sync.Mutex
+	mu *sync.Mutex // Make queue operations safe
 }
 
+//
 func NewEventQueue(maxStorage, maxHistory int, force ...bool) (*EventQueue, error) {
 	eventQueue := EventQueue{
 		EventQueue: store.EventQueue{
@@ -40,17 +42,19 @@ func NewEventQueue(maxStorage, maxHistory int, force ...bool) (*EventQueue, erro
 
 func (eq *EventQueue) Push(job *Job) error {
 	jobInstance, err := store.NewJobInstance(&job.Job)
-	jobInstance.State = StateCreated
+	jobInstance.State = StateRunning
+	jobInstance.StartTime = time.Now()
 	if err != nil {
 		return err
 	}
+
 	eq.mu.Lock()
+	defer eq.mu.Unlock()
+
 	if len(eq.events) == eq.MaxStorage {
-		eq.mu.Unlock()
 		return ErrorOverMaxConcurrentcy
 	}
 	eq.events = append(eq.events, jobInstance)
-	eq.mu.Unlock()
 
 	return nil
 }
@@ -67,6 +71,9 @@ func (eq *EventQueue) Pop2History(name string) error {
 	if err != nil {
 		return err
 	}
+	jobInstance.State = StateSuccess
+	jobInstance.Done = true
+	jobInstance.EndTime = time.Now()
 
 	err = store.AddHistory(jobInstance)
 	if err != nil {

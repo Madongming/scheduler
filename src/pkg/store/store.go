@@ -16,6 +16,15 @@ const (
 	EventQueuePath = "./mock/eventQueue.json"
 )
 
+func init() {
+	if _, err := os.Stat("./mock"); os.IsNotExist(err) {
+		err = os.Mkdir("./mock", os.ModePerm)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
 // CreateJobList Create JobList store
 func CreateJobList(key string, value JobList) error {
 	content, err := json.Marshal(
@@ -249,6 +258,7 @@ func GetJob(name string) (Job, error) {
 }
 
 // Events
+// CreateEventQueue Create EventQueue store
 func CreateEventQueue(key string, value EventQueue) error {
 	content, err := json.Marshal(
 		struct {
@@ -265,6 +275,7 @@ func CreateEventQueue(key string, value EventQueue) error {
 
 }
 
+// AddHistory Used to if Job is Done(include failed), Add it to the history list
 func AddHistory(value ...JobInstance) error {
 	mu.Lock()
 	defer mu.Unlock()

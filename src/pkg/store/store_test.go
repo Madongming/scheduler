@@ -180,7 +180,7 @@ func TestAddJob(t *testing.T) {
 					Job{
 						Name:             "job1",
 						Display:          "任务1",
-						Type:             "ShellScript",
+						TypeName:         "ShellScript",
 						ScheduleDuration: 3000000000,
 						Timeout:          1000000000,
 						RetryTimes:       3,
@@ -193,7 +193,7 @@ func TestAddJob(t *testing.T) {
 					Job{
 						Name:             "job1",
 						Display:          "任务1",
-						Type:             "ShellScript",
+						TypeName:         "ShellScript",
 						ScheduleDuration: 3000000000,
 						Timeout:          1000000000,
 						RetryTimes:       3,
@@ -263,7 +263,7 @@ func TestDeleteJob(t *testing.T) {
 			AddJob(Job{
 				Name:             "job1",
 				Display:          "任务1",
-				Type:             "ShellScript",
+				TypeName:         "ShellScript",
 				ScheduleDuration: 3000000000,
 				Timeout:          1000000000,
 				RetryTimes:       3,
@@ -319,7 +319,7 @@ func TestUpdateJob(t *testing.T) {
 				value: Job{
 					Name:             "job1",
 					Display:          "任务1",
-					Type:             "ShellScript",
+					TypeName:         "ShellScript",
 					ScheduleDuration: 4000000000,
 					Timeout:          1000000000,
 					RetryTimes:       3,
@@ -329,7 +329,7 @@ func TestUpdateJob(t *testing.T) {
 			want: Job{
 				Name:             "job1",
 				Display:          "任务1",
-				Type:             "ShellScript",
+				TypeName:         "ShellScript",
 				ScheduleDuration: 4000000000,
 				Timeout:          1000000000,
 				RetryTimes:       3,
@@ -341,7 +341,7 @@ func TestUpdateJob(t *testing.T) {
 	AddJob(Job{
 		Name:             "job1",
 		Display:          "任务1",
-		Type:             "ShellScript",
+		TypeName:         "ShellScript",
 		ScheduleDuration: 3000000000,
 		Timeout:          1000000000,
 		RetryTimes:       3,
@@ -386,7 +386,7 @@ func TestGetJobs(t *testing.T) {
 				Job{
 					Name:             "job1",
 					Display:          "任务1",
-					Type:             "ShellScript",
+					TypeName:         "ShellScript",
 					ScheduleDuration: 3000000000,
 					Timeout:          1000000000,
 					RetryTimes:       3,
@@ -399,7 +399,7 @@ func TestGetJobs(t *testing.T) {
 	AddJob(Job{
 		Name:             "job1",
 		Display:          "任务1",
-		Type:             "ShellScript",
+		TypeName:         "ShellScript",
 		ScheduleDuration: 3000000000,
 		Timeout:          1000000000,
 		RetryTimes:       3,
@@ -439,7 +439,7 @@ func TestGetJob(t *testing.T) {
 			want: Job{
 				Name:             "job1",
 				Display:          "任务1",
-				Type:             "ShellScript",
+				TypeName:         "ShellScript",
 				ScheduleDuration: 3000000000,
 				Timeout:          1000000000,
 				RetryTimes:       3,
@@ -458,7 +458,7 @@ func TestGetJob(t *testing.T) {
 	AddJob(Job{
 		Name:             "job1",
 		Display:          "任务1",
-		Type:             "ShellScript",
+		TypeName:         "ShellScript",
 		ScheduleDuration: 3000000000,
 		Timeout:          1000000000,
 		RetryTimes:       3,
@@ -548,13 +548,13 @@ func TestAddHistory(t *testing.T) {
 			args: args{
 				value: []JobInstance{
 					JobInstance{
-						Name:    "job1",
-						Display: "任务1",
-						Type:    "ShellScript",
-						State:   "Success",
-						Done:    true,
-						Reason:  "",
-						Message: "Hello, world",
+						Name:     "job1",
+						Display:  "任务1",
+						TypeName: "ShellScript",
+						State:    "Success",
+						Done:     true,
+						Reason:   "",
+						Message:  "Hello, world",
 					},
 				},
 			},
@@ -566,13 +566,13 @@ func TestAddHistory(t *testing.T) {
 					MaxHistory: 100,
 					History: []JobInstance{
 						JobInstance{
-							Name:    "job1",
-							Display: "任务1",
-							Type:    "ShellScript",
-							State:   "Success",
-							Done:    true,
-							Reason:  "",
-							Message: "Hello, world",
+							Name:     "job1",
+							Display:  "任务1",
+							TypeName: "ShellScript",
+							State:    "Success",
+							Done:     true,
+							Reason:   "",
+							Message:  "Hello, world",
 						},
 					},
 				},
@@ -615,13 +615,13 @@ func TestGetHistory(t *testing.T) {
 			name: "Get the history",
 			want: []JobInstance{
 				JobInstance{
-					Name:    "job1",
-					Display: "任务1",
-					Type:    "ShellScript",
-					State:   "Success",
-					Done:    true,
-					Reason:  "",
-					Message: "Hello, world",
+					Name:     "job1",
+					Display:  "任务1",
+					TypeName: "ShellScript",
+					State:    "Success",
+					Done:     true,
+					Reason:   "",
+					Message:  "Hello, world",
 				},
 			},
 			wantErr: false,
@@ -631,13 +631,13 @@ func TestGetHistory(t *testing.T) {
 		MaxStorage: 100,
 		MaxHistory: 100})
 	AddHistory(JobInstance{
-		Name:    "job1",
-		Display: "任务1",
-		Type:    "ShellScript",
-		State:   "Success",
-		Done:    true,
-		Reason:  "",
-		Message: "Hello, world",
+		Name:     "job1",
+		Display:  "任务1",
+		TypeName: "ShellScript",
+		State:    "Success",
+		Done:     true,
+		Reason:   "",
+		Message:  "Hello, world",
 	})
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
