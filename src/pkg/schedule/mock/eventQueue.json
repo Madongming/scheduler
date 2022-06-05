@@ -1,1 +1,0 @@
-{"key":"_event_default-root","value":{"maxStorage":2,"maxHistory":1,"history":[{"name":"job2","display":"任务2","type":"ShellScript","state":"Success","startTime":"2022-06-05T18:44:39.579092+08:00","endTime":"2022-06-05T18:44:39.579678+08:00","done":true,"reason":"","message":""}]}}

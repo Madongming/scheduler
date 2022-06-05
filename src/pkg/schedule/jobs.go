@@ -95,13 +95,13 @@ func (_ *JobList) GetJob(name string) (store.Job, error) {
 func (jl *JobList) StartSchedule(job *Job) error {
 	select {
 	case jl.chScheduled <- struct{}{}:
-		go func(j *Job) {
+		go func(j Job) {
 			defer func() { <-jl.chScheduled }()
 			j.ticker = time.NewTicker(j.ScheduleDuration)
 			for _ = range j.ticker.C {
-				jl.RunJob(j)
+				jl.RunJob(&j)
 			}
-		}(job)
+		}(*job)
 	default:
 		return ErrorOverMaxScheduled
 	}
@@ -140,7 +140,6 @@ func (jl *JobList) RunJob(job *Job) error {
 	default:
 		return ErrorOverMaxConcurrentcy
 	}
-	return nil
 }
 
 // StopJob stop a Job
